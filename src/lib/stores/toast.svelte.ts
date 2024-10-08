@@ -4,7 +4,7 @@ export interface Toast {
 	message: string;
 }
 
-const DISMISS_AFTER = 3000;
+const DISMISS_AFTER = 5000;
 
 class ToastContext {
 	private _toasts: Toast[] = $state([]);

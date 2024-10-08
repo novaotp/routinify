@@ -35,7 +35,7 @@
 	role="alert"
 	transition:fly={{ duration: 300, x: 200 }}
 	class={cn(
-		'relative flex w-full items-center gap-5 overflow-hidden rounded-lg px-4 py-2 shadow-[0_0_4px_4px_rgba(0,0,0,0.1)]',
+		'relative flex w-full items-center gap-5 overflow-hidden rounded-lg bg-white px-4 py-3 shadow-[0_0_4px_4px_rgba(0,0,0,0.1)]',
 		'after:absolute after:left-0 after:top-0 after:h-full after:w-2 after:content-[""]'
 	)}
 	style="--bg-color: {bgColor};"
