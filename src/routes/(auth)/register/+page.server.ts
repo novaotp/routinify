@@ -1,9 +1,9 @@
-import { error, fail, redirect } from '@sveltejs/kit';
-import { prisma } from '$lib/server/services/db';
+import { fail, redirect } from '@sveltejs/kit';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from '$lib/server/firebase';
+import { FirebaseError } from 'firebase/app';
+import { addDoc, collection } from 'firebase/firestore';
 import type { Actions } from './$types';
-import { hash } from 'bcrypt';
-
-const HASH_SALT_ROUNDS = 15;
 
 export const actions: Actions = {
 	default: async ({ request }) => {
@@ -20,26 +20,40 @@ export const actions: Actions = {
 			return fail(422, { message: 'Password must be at least 8 characters long.' });
 		}
 
-		const existingUser = await prisma.user.findUnique({ where: { email } });
+		let userCredential: Awaited<ReturnType<typeof createUserWithEmailAndPassword>>;
+		try {
+			userCredential = await createUserWithEmailAndPassword(auth, email, password);
+		} catch (err) {
+			console.error(err);
 
-		if (existingUser) {
-			return fail(422, { message: 'Email address already in use.' });
+			if (err instanceof FirebaseError && err.code === 'auth/email-already-in-use') {
+				return fail(409, { message: 'Email address already in use.' });
+			}
+
+			return fail(500, { message: 'Internal server error.' });
+		}
+
+		const user = {
+			authenticationId: userCredential.user.uid,
+			nickname: randomNickname(),
+			email
+		};
+
+		try {
+			await addDoc(collection(db, 'users'), user);
+		} catch (err) {
+			console.error(err);
+			return fail(500, { message: 'Internal server error.' });
 		}
 
 		try {
-			await prisma.user.create({
-				data: {
-					nickname: randomNickname(),
-					email,
-					password: await hash(password, HASH_SALT_ROUNDS)
-				}
-			});
+			await signInWithEmailAndPassword(auth, email, password);
 		} catch (err) {
 			console.error(err);
-			return error(500, { message: 'Something went wrong.' });
+			return fail(500, { message: 'Internal server error.' });
 		}
 
-		throw redirect(303, '/login');
+		throw redirect(303, '/app');
 	}
 };
 

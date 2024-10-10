@@ -1,14 +1,11 @@
 import { fail, redirect } from '@sveltejs/kit';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '$lib/server/firebase';
 import type { Actions } from './$types';
-import { prisma } from '$lib/server/services/db';
-import { compare } from 'bcrypt';
-import type { Session } from '@prisma/client';
-
-/** 7 days. */
-const SESSION_EXPIRES_IN = 604800000;
+import { FirebaseError } from 'firebase/app';
 
 export const actions: Actions = {
-	default: async ({ cookies, request, url }) => {
+	default: async ({ request, url }) => {
 		const formData = await request.formData();
 
 		const email = formData.get('email')?.toString();
@@ -18,32 +15,17 @@ export const actions: Actions = {
 			return fail(422, { message: 'Please enter an email and a password.' });
 		}
 
-		const user = await prisma.user.findUnique({ where: { email } });
-
-		if (!user || !(await compare(password, user.password))) {
-			return fail(401, { message: 'Invalid email or password.' });
-		}
-
-		let session: Session;
 		try {
-			session = await prisma.session.create({
-				data: {
-					userId: user.id,
-					expires: new Date(Date.now() + SESSION_EXPIRES_IN)
-				}
-			});
+			await signInWithEmailAndPassword(auth, email, password);
 		} catch (err) {
 			console.error(err);
-			return fail(500, { message: 'Something went wrong. Please try again later.' });
-		}
 
-		cookies.set('X-SESSION-ID', session.id, {
-			path: '/',
-			httpOnly: true,
-			secure: true,
-			sameSite: 'strict',
-			expires: session.expires
-		});
+			if (err instanceof FirebaseError && err.code === 'auth/invalid-credential') {
+				return fail(404, { message: 'Invalid credentials.' });
+			}
+
+			return fail(500, { message: 'Internal server error.' });
+		}
 
 		throw redirect(303, url.searchParams.get('from') ?? '/app');
 	}

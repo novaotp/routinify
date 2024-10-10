@@ -1,24 +1,31 @@
-import { prisma } from '$lib/server/services/db';
+import { auth, db } from '$lib/server/firebase';
 import { redirect } from '@sveltejs/kit';
+import { signOut } from 'firebase/auth';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import type { User } from '$types/User';
 
 export const handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname;
-	const sessionId = event.cookies.get('X-SESSION-ID');
 
 	// @ts-expect-error Won't set user to be of type `undefined`.
 	event.locals.user = undefined;
 
-	if (pathname.startsWith('/app') && !sessionId) {
+	if (pathname.startsWith('/app') && !auth.currentUser?.uid) {
 		const message = 'Please log in to access this page.';
-		throw redirect(303, `/login?message=${encodeURIComponent(message)}&from=${pathname}`);
-	} else if (sessionId) {
-		const user = await getUserBySessionId(sessionId);
+		throw redirect(303, `/login?message=${message}&from=${encodeURIComponent(pathname)}`);
+	} else if (auth.currentUser?.uid) {
+		let user: User | undefined = undefined;
+		try {
+			user = await getUser();
+		} catch (err) {
+			console.error(err);
+		}
 
 		if (!user) {
-			event.cookies.delete('X-SESSION-ID', { path: '/' });
+			await signOut(auth);
 
-			const message = 'Please log in to access this page.';
-			throw redirect(303, `/login?message=${encodeURIComponent(message)}&from=${pathname}`);
+			const message = 'An error occurred. Please log in to access this page.';
+			throw redirect(303, `/login?message=${message}&from=${encodeURIComponent(pathname)}`);
 		}
 
 		event.locals.user = user;
@@ -28,23 +35,17 @@ export const handle = async ({ event, resolve }) => {
 };
 
 /**
- * Gets a user by their session ID.
- * @param {string} sessionId The session ID to use to get the user.
+ * Gets a user by their authentication ID.
+ * @returns The user if found, otherwise `undefined`.
  */
-const getUserBySessionId = async (sessionId: string): Promise<App.Locals['user'] | null> => {
-	return prisma.user.findFirst({
-		where: {
-			sessions: {
-				some: {
-					id: sessionId
-				}
-			}
-		},
-		select: {
-			id: true,
-			nickname: true,
-			email: true,
-			createdAt: true
-		}
-	});
+const getUser = async (): Promise<User | undefined> => {
+	const q = query(collection(db, 'users'), where('authenticationId', '==', auth.currentUser?.uid));
+	const snapshot = await getDocs(q);
+
+	if (snapshot.empty) return undefined;
+
+	return {
+		...snapshot.docs[0].data(),
+		id: snapshot.docs[0].id
+	} as User;
 };
