@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { toast } from '$stores/toast.svelte';
+	import { toast } from '$stores/toast/index.svelte';
 	import { Button, Input, Label } from '$ui/forms';
 	import type { SubmitFunction } from './$types';
 

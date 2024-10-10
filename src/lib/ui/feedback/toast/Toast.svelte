@@ -3,7 +3,7 @@
 	import CloseIcon from '@tabler/icons-svelte/icons/x';
 	import { cn } from '$utils/cn';
 	import type { Snippet } from 'svelte';
-	import type { Toast } from '$stores/toast.svelte';
+	import type { Toast } from '$stores/toast/index.svelte';
 
 	interface Props {
 		type: Toast['type'];

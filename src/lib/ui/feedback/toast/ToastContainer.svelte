@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Toast from './Toast.svelte';
-	import { toast } from '$stores/toast.svelte';
+	import { toast } from '$stores/toast/index.svelte';
 </script>
 
 <section

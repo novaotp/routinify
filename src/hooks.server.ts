@@ -12,7 +12,7 @@ export const handle = async ({ event, resolve }) => {
 		const message = 'Please log in to access this page.';
 		throw redirect(303, `/login?message=${encodeURIComponent(message)}&from=${pathname}`);
 	} else if (sessionId) {
-		const user = await getUSerBySessionId(sessionId);
+		const user = await getUserBySessionId(sessionId);
 
 		if (!user) {
 			event.cookies.delete('X-SESSION-ID', { path: '/' });
@@ -31,7 +31,7 @@ export const handle = async ({ event, resolve }) => {
  * Gets a user by their session ID.
  * @param {string} sessionId The session ID to use to get the user.
  */
-const getUSerBySessionId = async (sessionId: string): Promise<App.Locals['user'] | null> => {
+const getUserBySessionId = async (sessionId: string): Promise<App.Locals['user'] | null> => {
 	return prisma.user.findFirst({
 		where: {
 			sessions: {

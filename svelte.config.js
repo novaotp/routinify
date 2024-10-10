@@ -10,7 +10,8 @@ const config = {
 			$stores: './src/lib/stores',
 			$utils: './src/lib/utils',
 			$components: './src/lib/components',
-			$ui: './src/lib/ui'
+			$ui: './src/lib/ui',
+			$types: './src/lib/types'
 		}
 	}
 };
