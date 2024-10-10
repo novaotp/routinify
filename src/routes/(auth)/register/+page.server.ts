@@ -35,6 +35,7 @@ export const actions: Actions = {
 
 		const user = {
 			authenticationId: userCredential.user.uid,
+			avatarPath: null,
 			nickname: randomNickname(),
 			email
 		};

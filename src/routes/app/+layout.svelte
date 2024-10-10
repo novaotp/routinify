@@ -19,9 +19,7 @@
 </script>
 
 <div class="relative h-[calc(100%-80px)] w-full">{@render children()}</div>
-<nav
-	class="relative flex h-20 w-full items-center justify-evenly shadow-[0_0_4px_4px_rgba(0,0,0,0.1)]"
->
+<nav class="relative flex h-20 w-full items-center justify-evenly border-t-2 border-zinc-300">
 	{#each links as { name, href, Icon } (name)}
 		<button
 			onclick={() => goto(href)}
