@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { toast } from '$stores/toast/index.svelte';
+	import { Banner } from '$ui/feedback';
 	import { Button, Input, Label } from '$ui/forms';
 	import type { SubmitFunction } from './$types';
 
@@ -31,9 +32,9 @@
 
 <main class="relative flex h-full w-full flex-col items-center justify-center gap-14 p-5">
 	{#if $page.url.searchParams.has('message')}
-		<div class="relative w-full rounded-2xl bg-red-500 px-5 py-3 text-zinc-50">
+		<Banner type="error">
 			{$page.url.searchParams.get('message')}
-		</div>
+		</Banner>
 	{/if}
 	<h1 class="text-3xl">Login</h1>
 	<form method="post" use:enhance={loginEnhance} class="relative flex w-full flex-col gap-5">

@@ -1,7 +1,7 @@
 import { fail } from '@sveltejs/kit';
-import type { Actions, PageServerLoad } from './$types';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '$lib/server/firebase';
+import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
 	return;

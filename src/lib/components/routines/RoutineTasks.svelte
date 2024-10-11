@@ -1,10 +1,12 @@
 <script lang="ts">
-	import type { RoutineTask } from '$types/RoutineTask';
+	import type { RoutineTask } from '$types/Routine';
 	import { Button, Input, Label, TextArea } from '$ui/forms';
 	import { Dialog, Overlay } from '$ui/portals';
 	import IconPlus from '@tabler/icons-svelte/icons/plus';
 	import IconX from '@tabler/icons-svelte/icons/x';
 	import IconTrash from '@tabler/icons-svelte/icons/trash';
+	import IconEdit from '@tabler/icons-svelte/icons/edit';
+	import { presets } from '$ui/forms/button';
 
 	interface Props {
 		tasks: RoutineTask[];
@@ -22,7 +24,8 @@
 		const task = { id: crypto.randomUUID(), name: '', description: '', duration: 0 };
 		tasks.push(task);
 
-		openTask(task);
+		// Cannot use task directly because it won't be reactive.
+		openTask(tasks.find((t) => t.id === task.id)!);
 	};
 
 	const removeTask = (task: RoutineTask) => {
@@ -34,16 +37,23 @@
 <Label.Root>
 	<div class="flex items-center justify-between">
 		<Label.Control for="tasks">Tasks</Label.Control>
-		<Button onclick={addDefaultTask} class="aspect-square h-10 p-0 flex-center">
+		<Button onclick={addDefaultTask} class={presets.square}>
 			<IconPlus />
 		</Button>
 	</div>
-	<ul class="flex flex-col gap-5">
-		{#each tasks as task}
-			<li class="relative w-full shadow-md">
-				<button onclick={() => openTask(task)} type="button" class="relative w-full p-5">
-					{task.name}
-				</button>
+	<ul class="flex flex-col gap-[10px]">
+		{#each tasks as task, i}
+			<li class="relative w-full pl-5">
+				<div class="relative flex w-full items-center justify-between">
+					<span>{i + 1}. {task.name} for {task.duration} minutes</span>
+					<Button
+						onclick={() => openTask(task)}
+						type="button"
+						class="{presets.secondary} {presets.square} h-8 rounded-xl"
+					>
+						<IconEdit class="size-5" />
+					</Button>
+				</div>
 			</li>
 		{:else}
 			<li>You don't have any tasks yet.</li>
@@ -73,7 +83,7 @@
 						bind:value={selectedTask.name}
 						name="name"
 						type="text"
-						placeholder="Enter your routine's name..."
+						placeholder="Enter your task's name..."
 					/>
 				</Label.Root>
 				<Label.Root>
@@ -81,16 +91,16 @@
 					<TextArea
 						bind:value={selectedTask.description}
 						name="description"
-						placeholder="Enter your routine's description..."
+						placeholder="Enter your task's description..."
 					/>
 				</Label.Root>
 				<Label.Root>
-					<Label.Control for="duration">Duration</Label.Control>
+					<Label.Control for="duration">Duration (in minutes)</Label.Control>
 					<Input
 						bind:value={selectedTask.duration}
 						name="duration"
 						type="number"
-						placeholder="Enter your routine's duration..."
+						placeholder="Enter your task's duration..."
 					/>
 				</Label.Root>
 			</div>
