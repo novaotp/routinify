@@ -12,6 +12,7 @@
 </script>
 
 <div
+	role="dialog"
 	transition:flyAndScale
 	class={cn(
 		'relative flex w-full max-w-lg flex-col gap-5 bg-white p-5 shadow-2xl sm:rounded-2xl',

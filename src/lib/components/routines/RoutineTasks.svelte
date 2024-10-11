@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { RoutineTask } from '$types/RoutineTask';
 	import { Button, Input, Label, TextArea } from '$ui/forms';
-	import { Modal, Overlay } from '$ui/portals';
+	import { Dialog, Overlay } from '$ui/portals';
 	import IconPlus from '@tabler/icons-svelte/icons/plus';
 	import IconX from '@tabler/icons-svelte/icons/x';
 	import IconTrash from '@tabler/icons-svelte/icons/trash';
@@ -53,7 +53,7 @@
 
 {#if selectedTask}
 	<Overlay onBackgroundClick={() => (selectedTask = null)}>
-		<Modal>
+		<Dialog>
 			<header class="relative flex w-full items-center justify-between">
 				<button onclick={() => (selectedTask = null)} type="button">
 					<IconX />
@@ -94,6 +94,6 @@
 					/>
 				</Label.Root>
 			</div>
-		</Modal>
+		</Dialog>
 	</Overlay>
 {/if}

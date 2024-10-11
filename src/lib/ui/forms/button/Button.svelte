@@ -13,7 +13,11 @@
 
 <button
 	{type}
-	class={cn('rounded-2xl bg-teal-500 px-5 py-2 text-zinc-900', className)}
+	class={cn(
+		'rounded-2xl bg-teal-500 px-5 py-2 text-zinc-900',
+		'disabled:bg-teal-500/50 disabled:text-zinc-900/50',
+		className
+	)}
 	{...restProps}
 >
 	{@render children?.()}

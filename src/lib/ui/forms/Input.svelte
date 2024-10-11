@@ -2,23 +2,22 @@
 	import { cn } from '$utils/cn';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 
-	interface Props extends HTMLInputAttributes {
-		class?: string;
-		placeholder?: string;
-		type?: string;
-		value?: string | number;
-	}
+	interface Props extends HTMLInputAttributes {}
 
 	let {
 		class: className = '',
 		placeholder = '',
 		type = 'text',
 		value = $bindable(''),
+		id = undefined,
+		name = undefined,
 		...restProps
 	}: Props = $props();
 </script>
 
 <input
+	id={id ?? name}
+	{name}
 	bind:value
 	{placeholder}
 	{type}
