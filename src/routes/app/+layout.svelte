@@ -16,19 +16,28 @@
 		{ name: 'Routines', href: '/app/routines', Icon: IconRoute },
 		{ name: 'Profile', href: '/app/profile', Icon: IconUserFilled }
 	];
+
+	let showNav = $derived.by(() => {
+		// Check if the path matches `/app/routines/:id` or `/app/routines/new`
+		const excludePathsPattern = /^\/app\/routines\/(new|[^\/]+)$/;
+
+		return !excludePathsPattern.test($page.url.pathname);
+	});
 </script>
 
 <div class="relative h-[calc(100%-80px)] w-full">{@render children()}</div>
-<nav class="relative flex h-20 w-full items-center justify-evenly border-t-2 border-zinc-300">
-	{#each links as { name, href, Icon } (name)}
-		<button
-			onclick={() => goto(href)}
-			class={cn('flex flex-col items-center gap-2', {
-				'text-zinc-500': $page.url.pathname !== href
-			})}
-		>
-			<Icon />
-			<span class="text-xs">{name}</span>
-		</button>
-	{/each}
-</nav>
+{#if showNav}
+	<nav class="relative flex h-20 w-full items-center justify-evenly border-t-2 border-zinc-300">
+		{#each links as { name, href, Icon } (name)}
+			<button
+				onclick={() => goto(href)}
+				class={cn('flex flex-col items-center gap-2', {
+					'text-zinc-500': $page.url.pathname !== href
+				})}
+			>
+				<Icon />
+				<span class="text-xs">{name}</span>
+			</button>
+		{/each}
+	</nav>
+{/if}

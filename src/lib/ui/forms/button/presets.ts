@@ -5,9 +5,9 @@
  */
 export const presets = {
 	/** A preset for secondary actions. */
-	secondary: 'border border-teal-500 bg-teal-200 disabled:bg-teal-200 disabled:border-teal-500/50',
+	secondary: 'border border-teal-500 bg-teal-200',
 	/** A preset for dangerous actions. */
-	destroy: 'bg-red-500 bg-white',
+	destroy: 'bg-red-500 text-white',
 	/**
 	 * Transforms the button to a square-shape and centers its content.
 	 * @description Edit the height.

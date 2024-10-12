@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import RoutineCard from '$components/routines/RoutineCard.svelte';
 	import { Button } from '$ui/forms';
 	import IconPlus from '@tabler/icons-svelte/icons/plus';
 
@@ -15,12 +16,10 @@
 	{#await data.routines}
 		<p>Loading routines...</p>
 	{:then routines}
-		<ul class="flex flex-col gap-[10px]">
+		<ul class="relative flex w-full flex-col gap-[10px]">
 			{#each routines as routine (routine.id)}
-				<li>
-					<button>
-						{routine.name}
-					</button>
+				<li class="relative w-full">
+					<RoutineCard {routine} />
 				</li>
 			{:else}
 				<p>You don't have any routines yet.</p>

@@ -1,30 +1,25 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { Button, Input, Label } from '$ui/forms';
-	import IconX from '@tabler/icons-svelte/icons/x';
+	import { enhance } from '$app/forms';
+	import IconChevronLeft from '@tabler/icons-svelte/icons/chevron-left';
+	import IconTrash from '@tabler/icons-svelte/icons/trash';
 	import RoutineTasks from '$components/routines/RoutineTasks.svelte';
-	import type { RoutineDay, RoutineTask } from '$types/Routine';
+	import { Button, Input, Label } from '$ui/forms';
+	import { presets } from '$ui/forms/button';
 	import { cn } from '$utils/cn';
 	import { Banner } from '$ui/feedback';
-	import { run } from 'svelte/legacy';
-	import type { SubmitFunction } from './$types';
 	import { toast } from '$stores/toast/index.svelte';
-	import { enhance } from '$app/forms';
+	import type { SubmitFunction } from './$types';
+	import type { RoutineDay, RoutineTask } from '$types/Routine';
 
-	let name = $state('');
-	let trigger = $state('');
-	let days = $state<Record<RoutineDay, boolean>>({
-		monday: false,
-		tuesday: false,
-		wednesday: false,
-		thursday: false,
-		friday: false,
-		saturday: false,
-		sunday: false
-	});
-	const tasks = $state<RoutineTask[]>([]);
+	let { data } = $props();
 
-	const customEnhance: SubmitFunction = ({ cancel, formData }) => {
+	let name = $state(data.routine.name);
+	let trigger = $state(data.routine.trigger);
+	let days = $state<Record<RoutineDay, boolean>>(data.routine.days);
+	const tasks = $state<RoutineTask[]>(data.routine.tasks);
+
+	const editEnhance: SubmitFunction = ({ cancel, formData }) => {
 		if (!name) {
 			toast.error('Please enter a name for the routine.');
 			return cancel();
@@ -38,6 +33,16 @@
 				return toast.error(result.data?.message ?? '');
 			} else if (result.type === 'success') {
 				toast.success(result.data?.message ?? '');
+			}
+		};
+	};
+
+	const deleteEnhance: SubmitFunction = () => {
+		return async ({ result }) => {
+			if (result.type === 'failure') {
+				return toast.error(result.data?.message ?? '');
+			} else if (result.type === 'success') {
+				toast.success(result.data?.message ?? '');
 				return goto('/app/routines');
 			}
 		};
@@ -45,14 +50,21 @@
 </script>
 
 <svelte:head>
-	<title>New Routine | Routinify</title>
+	<title>{data.routine.name} - Routine | Routinify</title>
 </svelte:head>
 
 <header class="relative flex w-full items-center justify-between p-5">
-	<button onclick={() => goto('/app/routines')}>
-		<IconX />
+	<button onclick={() => history.back()}>
+		<IconChevronLeft />
 	</button>
-	<Button form="new-routine" type="submit">Save</Button>
+	<div class="flex gap-5">
+		<form method="post" action="?/destroy" use:enhance={deleteEnhance} class="relative">
+			<Button type="submit" class="{presets.destroy} {presets.square}">
+				<IconTrash />
+			</Button>
+		</form>
+		<Button form="new-routine" type="submit">Save</Button>
+	</div>
 </header>
 <main class="relative flex w-full flex-grow flex-col gap-5 px-5">
 	{#if trigger === '' || Object.values(days).every((d) => d === false)}
@@ -64,7 +76,13 @@
 			{/if}
 		</Banner>
 	{/if}
-	<form method="post" use:enhance={customEnhance} id="new-routine" class="flex flex-col gap-5">
+	<form
+		method="post"
+		action="?/edit"
+		use:enhance={editEnhance}
+		id="new-routine"
+		class="flex flex-col gap-5"
+	>
 		<Label.Root>
 			<Label.Control for="name">Name *</Label.Control>
 			<Input

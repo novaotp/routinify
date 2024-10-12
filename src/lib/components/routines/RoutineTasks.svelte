@@ -56,7 +56,7 @@
 				</div>
 			</li>
 		{:else}
-			<li>You don't have any tasks yet.</li>
+			<li class="text-sm text-zinc-500">You don't have any tasks yet.</li>
 		{/each}
 	</ul>
 </Label.Root>
