@@ -63,7 +63,12 @@
 			{/if}
 		</Banner>
 	{/if}
-	<form method="post" use:enhance={customEnhance} id="new-routine" class="flex flex-col gap-5">
+	<form
+		method="post"
+		use:enhance={customEnhance}
+		id="new-routine"
+		class="relative flex w-full flex-col gap-5"
+	>
 		<Label.Root>
 			<Label.Control for="name">Name *</Label.Control>
 			<Input
@@ -75,13 +80,14 @@
 			/>
 		</Label.Root>
 		<RoutineTasks {tasks} />
-		<Label.Root>
+		<Label.Root class="w-full">
 			<Label.Control for="trigger">Trigger</Label.Control>
 			<Input
 				bind:value={trigger}
 				name="trigger"
 				type="time"
 				placeholder="Enter your routine's trigger time..."
+				class="w-full"
 			/>
 		</Label.Root>
 		<Label.Root>
