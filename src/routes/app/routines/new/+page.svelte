@@ -51,15 +51,15 @@
 	<button onclick={() => goto('/app/routines')}>
 		<IconX />
 	</button>
-	<Button form="new-routine" type="submit">Save</Button>
+	<Button form="new-routine" type="submit" disabled={name === ''}>Create</Button>
 </header>
 <main class="relative flex w-full flex-grow flex-col gap-5 px-5">
 	{#if trigger === '' || Object.values(days).every((d) => d === false)}
 		<Banner type="warning">
 			{#if trigger === ''}
-				An empty trigger means that the routine will never run.
+				An empty trigger means that the routine will never run automatically.
 			{:else if Object.values(days).every((d) => d === false)}
-				No days selected means that the routine will never run.
+				No days selected means that the routine will never run automatically.
 			{/if}
 		</Banner>
 	{/if}

@@ -5,15 +5,26 @@
 
 	interface Props extends HTMLButtonAttributes {
 		children?: Snippet;
-		class?: string;
 	}
 
-	let { children, class: className = '', type = 'button', ...restProps }: Props = $props();
+	let {
+		children,
+		class: className = '',
+		type = 'button',
+		disabled = false,
+		...restProps
+	}: Props = $props();
 </script>
 
 <button
 	{type}
-	class={cn('rounded-2xl bg-teal-500 px-5 py-2 text-zinc-900 disabled:opacity-50', className)}
+	{disabled}
+	aria-disabled={disabled}
+	class={cn(
+		'rounded-2xl bg-teal-500 px-5 py-2 text-zinc-900',
+		'disabled:cursor-not-allowed disabled:opacity-50',
+		className
+	)}
 	{...restProps}
 >
 	{@render children?.()}

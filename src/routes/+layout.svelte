@@ -10,16 +10,6 @@
 
 	onMount(() => {
 		initNotificationsOnDevice();
-
-		if ('serviceWorker' in navigator) {
-			window.addEventListener('load', async () => {
-				await navigator.serviceWorker.register('../service-worker.js', {
-					type: dev ? 'module' : 'classic'
-				});
-
-				toast.success('Service worker registered');
-			});
-		}
 	});
 </script>
 

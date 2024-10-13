@@ -47,7 +47,7 @@ export const disableNotificationsOnDevice = () => {
  * Sends a notification on the device.
  * @returns `true` if the notification was sent, `false` otherwise (happens if the permission is `denied`).
  */
-export const sendNotificationOnDevice = (
+export const sendNotificationOnDevice = async (
 	title: string,
 	options: NotificationOptions = { icon: '/logos/favicon.svg' }
 ) => {
@@ -55,7 +55,9 @@ export const sendNotificationOnDevice = (
 		return false;
 	}
 
-	navigator.serviceWorker.controller?.postMessage({ title, options });
+	navigator.serviceWorker.ready.then((registration) => {
+		registration.showNotification(title, options);
+	});
 
 	return true;
 };

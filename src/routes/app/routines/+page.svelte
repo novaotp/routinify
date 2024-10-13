@@ -11,7 +11,9 @@
 	<title>My Routines | Routinify</title>
 </svelte:head>
 
-<main class="relative flex h-full w-full flex-col items-start justify-start gap-10 p-5">
+<main
+	class="relative flex h-full w-full flex-col items-start justify-start gap-10 overflow-auto p-5 pb-[90px]"
+>
 	<h1>My Routines</h1>
 	{#await data.routines}
 		<p>Loading routines...</p>
@@ -31,7 +33,7 @@
 </main>
 <Button
 	onclick={() => goto('/app/routines/new')}
-	class="fixed bottom-[100px] right-5 flex aspect-square h-[50px] items-center justify-center p-0"
+	class="fixed bottom-[100px] right-5 flex aspect-square h-[50px] items-center justify-center p-0 shadow-[0_0_4px_2px_rgba(0,0,0,0.1)]"
 >
 	<IconPlus />
 </Button>

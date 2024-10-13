@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import { cn } from '$utils/cn';
 	import IconCircleCheckFilled from '@tabler/icons-svelte/icons/circle-check-filled';
 	import IconAlertTriangleFilled from '@tabler/icons-svelte/icons/alert-triangle-filled';
 	import IconInfoSquareFilled from '@tabler/icons-svelte/icons/info-square-filled';
 	import IconExclamationCircleFilled from '@tabler/icons-svelte/icons/exclamation-circle-filled';
-	import { cn } from '$utils/cn';
+	import type { Snippet } from 'svelte';
 
 	interface Props {
 		children?: Snippet;

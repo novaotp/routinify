@@ -36,7 +36,14 @@
 
 <Label.Root>
 	<div class="flex items-center justify-between">
-		<Label.Control for="tasks">Tasks</Label.Control>
+		<div class="flex items-center justify-start gap-5">
+			<Label.Control for="tasks">Tasks</Label.Control>
+			{#if tasks.length > 0}
+				<span class="text-sm text-zinc-500">
+					({tasks.length} for {tasks.reduce((sum, task) => sum + task.duration, 0)} minutes)
+				</span>
+			{/if}
+		</div>
 		<Button onclick={addDefaultTask} class={presets.square}>
 			<IconPlus />
 		</Button>
@@ -45,7 +52,12 @@
 		{#each tasks as task, i}
 			<li class="relative w-full pl-5">
 				<div class="relative flex w-full items-center justify-between">
-					<span>{i + 1}. {task.name} for {task.duration} minutes</span>
+					<div>
+						<span>{i + 1}. {task.name}</span>
+						{#if task.duration}
+							<span> for {task.duration} minutes </span>
+						{/if}
+					</div>
 					<Button
 						onclick={() => openTask(task)}
 						type="button"

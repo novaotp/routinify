@@ -19,6 +19,15 @@
 	let days = $state<Record<RoutineDay, boolean>>(data.routine.days);
 	const tasks = $state<RoutineTask[]>(data.routine.tasks);
 
+	let hasChanged = $derived.by(() => {
+		return (
+			name !== data.routine.name ||
+			trigger !== data.routine.trigger ||
+			JSON.stringify(days) !== JSON.stringify(data.routine.days) ||
+			JSON.stringify(tasks) !== JSON.stringify(data.routine.tasks)
+		);
+	});
+
 	const editEnhance: SubmitFunction = ({ cancel, formData }) => {
 		if (!name) {
 			toast.error('Please enter a name for the routine.');
@@ -63,16 +72,16 @@
 				<IconTrash />
 			</Button>
 		</form>
-		<Button form="new-routine" type="submit">Save</Button>
+		<Button form="new-routine" type="submit" disabled={!hasChanged}>Save</Button>
 	</div>
 </header>
 <main class="relative flex w-full flex-grow flex-col gap-5 px-5">
 	{#if trigger === '' || Object.values(days).every((d) => d === false)}
 		<Banner type="warning">
 			{#if trigger === ''}
-				An empty trigger means that the routine will never run.
+				An empty trigger means that the routine will never run automatically.
 			{:else if Object.values(days).every((d) => d === false)}
-				No days selected means that the routine will never run.
+				No days selected means that the routine will never run automatically.
 			{/if}
 		</Banner>
 	{/if}

@@ -7,14 +7,17 @@ export type Routine = {
 	createdAt: { seconds: number; nanoseconds: number };
 };
 
-export type RoutineDay =
-	| 'monday'
-	| 'tuesday'
-	| 'wednesday'
-	| 'thursday'
-	| 'friday'
-	| 'saturday'
-	| 'sunday';
+export const daysOfWeek = [
+	'monday',
+	'tuesday',
+	'wednesday',
+	'thursday',
+	'friday',
+	'saturday',
+	'sunday'
+] as const;
+
+export type RoutineDay = (typeof daysOfWeek)[number];
 
 export type RoutineTask = {
 	id: string;

@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import IconEdit from '@tabler/icons-svelte/icons/edit';
+	import IconPlayerPlayFilled from '@tabler/icons-svelte/icons/player-play-filled';
+	import { Button } from '$ui/forms';
+	import { presets } from '$ui/forms/button';
+	import { getActiveDays, isRoutineActive } from './utils';
 	import type { Routine } from '$types/Routine';
-	import { getActiveDays } from '$utils/functions/routines/get-active-days';
-	import { isRoutineActive } from '$utils/functions/routines/is-routine-active';
 
 	interface Props {
 		routine: Routine;
@@ -14,8 +17,7 @@
 	let activeDays = $derived(getActiveDays(routine));
 </script>
 
-<button
-	onclick={() => goto(`/app/routines/${routine.id}`)}
+<div
 	class="relative flex w-full flex-col items-start gap-[10px] rounded-2xl border-2 p-5 {borderColor}"
 >
 	{#if routine.trigger}
@@ -27,4 +29,15 @@
 			Every {activeDays.join(', ')}
 		</span>
 	{/if}
-</button>
+	<div class="flex w-full justify-end gap-5">
+		<Button
+			onclick={() => goto(`/app/routines/${routine.id}`)}
+			class="{presets.secondary} {presets.square}"
+		>
+			<IconEdit class="size-5" />
+		</Button>
+		<Button class={presets.square}>
+			<IconPlayerPlayFilled class="size-5" />
+		</Button>
+	</div>
+</div>

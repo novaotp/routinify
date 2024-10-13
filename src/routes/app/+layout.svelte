@@ -32,7 +32,7 @@
 			<button
 				onclick={() => goto(href)}
 				class={cn('flex flex-col items-center gap-2', {
-					'text-zinc-500': $page.url.pathname !== href
+					'text-zinc-400': $page.url.pathname !== href
 				})}
 			>
 				<Icon />
