@@ -2,10 +2,11 @@
 	import {
 		disableNotificationsOnDevice,
 		enableNotificationsOnDevice,
-		getNotificationsPermissionOnDevice
+		getNotificationsPermissionOnDevice,
+		sendNotificationOnDevice
 	} from '$stores/notification/index.svelte';
 	import { toast } from '$stores/toast/index.svelte';
-	import { Label, Switch } from '$ui/forms';
+	import { Button, Label, Switch } from '$ui/forms';
 	import IconArrowNarrowLeft from '@tabler/icons-svelte/icons/arrow-narrow-left';
 
 	interface Props {
@@ -46,5 +47,6 @@
 			<Label.Control for="allow-notifications">Allow notifications on this device</Label.Control>
 			<Switch checked={isChecked} onclick={onNotificationSwitch} />
 		</Label.Root>
+		<Button onclick={() => sendNotificationOnDevice('hello world')}>Test notification</Button>
 	</div>
 </div>
