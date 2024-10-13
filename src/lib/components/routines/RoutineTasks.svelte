@@ -1,12 +1,16 @@
 <script lang="ts">
-	import type { RoutineTask } from '$types/Routine';
+	/**
+	 * See https://svelte.dev/repl/f2397020cba34f5e9cb96336005f3435?version=3.37.0 for dragging
+	 */
+
 	import { Button, Input, Label, TextArea } from '$ui/forms';
 	import { Dialog, Overlay } from '$ui/portals';
 	import IconPlus from '@tabler/icons-svelte/icons/plus';
 	import IconX from '@tabler/icons-svelte/icons/x';
 	import IconTrash from '@tabler/icons-svelte/icons/trash';
-	import IconEdit from '@tabler/icons-svelte/icons/edit';
 	import { presets } from '$ui/forms/button';
+	import type { RoutineTask } from '$types/Routine';
+	import TaskList from './TaskList.svelte';
 
 	interface Props {
 		tasks: RoutineTask[];
@@ -48,29 +52,7 @@
 			<IconPlus />
 		</Button>
 	</div>
-	<ul class="flex flex-col gap-[10px]">
-		{#each tasks as task, i}
-			<li class="relative w-full pl-5">
-				<div class="relative flex w-full items-center justify-between">
-					<div>
-						<span>{i + 1}. {task.name}</span>
-						{#if task.duration}
-							<span> for {task.duration} minutes </span>
-						{/if}
-					</div>
-					<Button
-						onclick={() => openTask(task)}
-						type="button"
-						class="{presets.secondary} {presets.square} h-8 rounded-xl"
-					>
-						<IconEdit class="size-5" />
-					</Button>
-				</div>
-			</li>
-		{:else}
-			<li class="text-sm text-zinc-500">You don't have any tasks yet.</li>
-		{/each}
-	</ul>
+	<TaskList {tasks} {openTask} />
 </Label.Root>
 
 {#if selectedTask}
