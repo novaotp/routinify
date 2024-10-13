@@ -11,6 +11,7 @@
 	import { goto } from '$app/navigation';
 	import { Sheet } from '$ui/portals';
 	import { Avatar, PersonalInformation } from '$components/profile';
+	import NotificationPreferences from '$components/profile/NotificationPreferences.svelte';
 
 	const userContext = getUserContext();
 
@@ -67,7 +68,7 @@
 				<IconChevronRight class="text-zinc-400" />
 			</button>
 			<button
-				onclick={() => toast.info("This page doesn't exist yet.")}
+				onclick={() => openProfileSubpage('notification-preferences')}
 				class="relative flex justify-between"
 			>
 				<div class="flex gap-5">
@@ -107,6 +108,8 @@
 	<Sheet>
 		{#if currentSubpage === 'personal-information'}
 			<PersonalInformation onClose={closeProfileSubpage} />
+		{:else if currentSubpage === 'notification-preferences'}
+			<NotificationPreferences onClose={closeProfileSubpage} />
 		{/if}
 	</Sheet>
 {/if}

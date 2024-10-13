@@ -12,6 +12,12 @@ const config = {
 			$components: './src/lib/components',
 			$ui: './src/lib/ui',
 			$types: './src/lib/types'
+		},
+		/* csrf: {
+			checkOrigin: false // Only to test service workers in dev
+		}, */
+		serviceWorker: {
+			register: false
 		}
 	}
 };

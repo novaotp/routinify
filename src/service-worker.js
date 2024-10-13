@@ -1,9 +1,11 @@
 /// <reference types="@sveltejs/kit" />
+/// <reference no-default-lib="true"/>
+/// <reference lib="esnext" />
 /// <reference lib="webworker" />
 
 import { build, files, version } from '$service-worker';
 
-const sw = self as unknown as ServiceWorkerGlobalScope;
+const sw = /** @type {ServiceWorkerGlobalScope} */ (/** @type {unknown} */ (self));
 
 const CACHE = `cache-${version}`;
 const ASSETS = [
@@ -18,6 +20,8 @@ sw.addEventListener('install', (event) => {
 		await cache.addAll(ASSETS);
 	}
 
+	sw.skipWaiting();
+
 	event.waitUntil(addFilesToCache());
 });
 
@@ -27,6 +31,7 @@ sw.addEventListener('activate', (event) => {
 			if (key !== CACHE) await caches.delete(key);
 		}
 	}
+
 	event.waitUntil(deleteOldCaches());
 });
 
@@ -74,4 +79,14 @@ sw.addEventListener('fetch', (event) => {
 	}
 
 	event.respondWith(respond());
+});
+
+sw.addEventListener('message', async (event) => {
+	const notification = event.data;
+
+	try {
+		await sw.registration.showNotification(notification.title, notification.options);
+	} catch (err) {
+		console.error(err);
+	}
 });
